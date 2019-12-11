@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require ('bcrypt-nodejs');
 
 const app = express();
 
@@ -11,7 +12,6 @@ const database = {
 		id: '123',
 		name:'Onur',
 		email:'abc@gmail.com',
-		password:'ekmek',
 		entries: 0,
 		joined: new Date()
 	},
@@ -19,10 +19,16 @@ const database = {
 		id: '124',
 		name:'Ozan',
 		email:'abcd@gmail.com',
-		password:'toprak',
 		entries: 0,
 		joined:new Date()
 	}
+	],
+	login: [
+		{
+			id: '987',
+			hash: '',
+			email: 'john@gmail.com'
+		}
 	]
 }
 
@@ -31,8 +37,14 @@ app.get('/', (req, res) => {
 })
 
 app.post('/signin', (req, res) => {
-	if(req.body.email === database.users[1].email  && 
-		req.body.password === database.users[1].password) {
+	bcrypt.compare("meyve", '$2a$10$7x1C3V3FPbDO68RBDEcQq.WIXn4LnithHA8dhxZ5DP6L.7KexgXbu', function(err, res) {
+	    console.log('first deneme', res)
+	});
+	bcrypt.compare("veggies", '$2a$10$7x1C3V3FPbDO68RBDEcQq.WIXn4LnithHA8dhxZ5DP6L.7KexgXbu' , function(err, res) {
+	    console.log('second deneme', res)
+	});
+	if(req.body.email === database.users[0].email  && 
+		req.body.password === database.users[0].password) {
 		res.json('succes');
 	} else {
 		res.status(404).json('logging in  erroor')
@@ -81,17 +93,7 @@ app.post('/image', (req, res) => {
 	}
 })
 
+
 app.listen(3000, ()=> {
 	console.log('app running');
 })
-
-
-/*
-
---> res =this is working
---> signin --> POST = sucess / fail
-register --> POIST= user
-profile/:userId --> GET = user
-/imegae --> PUT  --> user update
-
-*/
