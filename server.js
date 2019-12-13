@@ -1,10 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require ('bcrypt-nodejs');
+const cors = require ('cors');
 
 const app = express();
 
+
 app.use(bodyParser.json());
+app.use(cors());
 
 const database = {
 	users:[
@@ -12,6 +15,7 @@ const database = {
 		id: '123',
 		name:'Onur',
 		email:'abc@gmail.com',
+		password: 'ekmek',
 		entries: 0,
 		joined: new Date()
 	},
@@ -19,6 +23,7 @@ const database = {
 		id: '124',
 		name:'Ozan',
 		email:'abcd@gmail.com',
+		password: 'toprak',
 		entries: 0,
 		joined:new Date()
 	}
@@ -45,7 +50,7 @@ app.post('/signin', (req, res) => {
 	});
 	if(req.body.email === database.users[0].email  && 
 		req.body.password === database.users[0].password) {
-		res.json('succes');
+		res.json('success');
 	} else {
 		res.status(404).json('logging in  erroor')
 	}
@@ -94,6 +99,6 @@ app.post('/image', (req, res) => {
 })
 
 
-app.listen(3000, ()=> {
-	console.log('app running');
+app.listen(3001, ()=> {
+	console.log('app running on port 3001');
 })
