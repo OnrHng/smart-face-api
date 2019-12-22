@@ -43,14 +43,12 @@ app.get('/', (req, res) => {
 
 app.post('/signin', (req, res) => {
 	bcrypt.compare("meyve", '$2a$10$7x1C3V3FPbDO68RBDEcQq.WIXn4LnithHA8dhxZ5DP6L.7KexgXbu', function(err, res) {
-	    console.log('first deneme', res)
 	});
 	bcrypt.compare("veggies", '$2a$10$7x1C3V3FPbDO68RBDEcQq.WIXn4LnithHA8dhxZ5DP6L.7KexgXbu' , function(err, res) {
-	    console.log('second deneme', res)
 	});
 	if(req.body.email === database.users[0].email  && 
 		req.body.password === database.users[0].password) {
-		res.json('success');
+		res.json(database.users[0]);
 	} else {
 		res.status(404).json('logging in  erroor')
 	}
@@ -62,7 +60,6 @@ app.post('/register', (req, res) => {
 		id: '125',
 		name:name,
 		email:email,
-		password:password,
 		entries: 0,
 		joined:new Date()
 	})
@@ -83,7 +80,7 @@ app.get('/profile/:id', (req,res) =>{
 	}
 })
 
-app.post('/image', (req, res) => {
+app.put ('/image', (req, res) => {
 	const { id } = req.body;
 	let userFound = false;
 	database.users.forEach(user =>{
