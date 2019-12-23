@@ -5,7 +5,6 @@ const cors = require ('cors');
 
 const app = express();
 
-
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -94,7 +93,6 @@ app.put ('/image', (req, res) => {
 		res.status(404).json('user isnt found')
 	}
 })
-
 
 app.listen(3001, ()=> {
 	console.log('app running on port 3001');
