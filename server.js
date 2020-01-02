@@ -2,6 +2,17 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require ('bcrypt-nodejs');
 const cors = require ('cors');
+const knex = require ('knex');
+
+const db = require('knex')({
+  client: 'pg',
+  connection: {
+    host : '127.0.0.1',
+    user : 'postgres',
+    password : 'zerotomastery',
+    database : 'smartface'
+  }
+});
 
 const app = express();
 
@@ -55,43 +66,45 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
 	const {email, name, password} = req.body;
-	database.users.push({
-		id: '125',
-		name:name,
-		email:email,
-		entries: 0,
-		joined:new Date()
-	})
-	res.json(database.users[database.users.length-1]);
+	db('users')
+		.returning('*')
+		.insert({
+			email: email,
+			name: name,
+			joined: new Date()
+		})
+		.then(user => {
+			res.json(user[0]);
+		})
+		.catch(err => res.status(400).json('can not be register'))
+	
 })
 
 app.get('/profile/:id', (req,res) =>{
 	const { id } = req.params;
-	let userFound = false;
-	database.users.forEach(user =>{
-		if(user.id === id) {
-			userFound = true;
-			res.json(user);
-		} 
+	db.select('*').from('users').where({
+		id: id
 	})
-	if (!userFound) {
-		res.status(404).json('user isnt found')
-	}
+		.then(user => {
+			if (user.length){
+				res.json(user[0])
+			}else {
+				res.status(400).json('Not Found')
+			}
+	})
+		.catch(err => res.status(400).json('ERRROOORR'))
 })
 
 app.put ('/image', (req, res) => {
 	const { id } = req.body;
-	let userFound = false;
-	database.users.forEach(user =>{
-		if(user.id === id) {
-			userFound = true;
-			user.entries++
-			res.json(user.entries);
-		} 
-	})
-	if (!userFound) {
-		res.status(404).json('user isnt found')
-	}
+	db('users')
+	  .where('id', '=', id)
+	  .increment('entries', 1)
+	  .returning('entries' )
+	  .then(entries	=> {
+	  	res.json(entries[0]);
+	  })
+	  .catch(err => res.status(400).json('unable get entries'))	
 })
 
 app.listen(3001, ()=> {
