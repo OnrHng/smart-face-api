@@ -4,7 +4,7 @@ const bcrypt = require ('bcrypt-nodejs');
 const cors = require ('cors');
 const knex = require ('knex');
 const register = require('./controllers/register');
-
+const signin = require('./controllers/signin');
 
 const db = require('knex')({
   client: 'pg',
@@ -25,25 +25,7 @@ app.get('/', (req, res) => {
 	res.send(database.users);
 })
 
-app.post('/signin', (req, res) => {
-	db.select('email', 'hash').from('login')
-	.where('email', '=', req.body.email)
-	.then(data => {
-		const isValid = bcrypt.compareSync(req.body.password, data[0].hash);
-		if(isValid){
-			db.select('*').from('users')
-			 .where('email', '=', req.body.email)
-			 .then(user => {
-			 	res.json(user[0])
-			 })
-			 .catch(err => res.status(400).json('unable getting user'))
-		} else {
-			res.status(400).json('email and password are not valid')
-		}
-	})
-	.catch(err => res.status(400).json('email and password are not valid'))
-})
-
+app.post('/signin', (req, res) => {signin.handleSignin(req, res, db, bcrypt) })
 app.post('/register', (req, res) => {register.handleRegister(req, res, db, bcrypt) })
 
 app.get('/profile/:id', (req,res) =>{
