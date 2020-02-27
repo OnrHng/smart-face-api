@@ -45,6 +45,6 @@ app.get('/profile/:id', (req,res) =>{
 		.catch(err => res.status(400).json('ERRROOORR'))
 })
 
-app.listen(3001, ()=> {
-	console.log('app running on port 3001');
+app.listen(process.env.PORT || 3000, ()=> {
+	console.log(`app running on port ${process.env.PORT}`);
 })
