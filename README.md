@@ -1,12 +1,10 @@
 # smart-face-api
-preperation for smart face app
 
-## DONE
+This API is BACK-END for smart face app which you can find in my [smart-face](https://github.com/OnrHng/smart-face) repository 
 
-connected DB with Postgresql using Knex 
-connected now Sign in form
-register form also is working now and Face recognation image is counting
+## DB and SERVER
 
-just made it sign in, register, und image backend
-
-and made a secure system for Password with bcrypt nodejs
+connected DB with Postgresql using Knex <br>
+connected now Sign in form and register form <br>
+secure system for Password with bcrypt nodejs <br>
+also DB and SERVER is online with heroku and heroku addons postgresql
